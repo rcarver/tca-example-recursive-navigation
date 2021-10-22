@@ -10,12 +10,12 @@ An experiment of recursive navigation using [The Composable Architecture](https:
 
 ### Novel Ideas
 
-* `View.navigation` and `View.sheet` modifiers use an Action to dismiss instead of an `onDismiss` callback.
-* `View.presentation` unifies all types of presentation, allowing the type to be chosen at runtime (Navigation vs Sheet for example). 
+* `View.navigation` and `View.sheet` modifiers use an Action to dismiss instead of an `onDismiss` callback in Composable Presentation.
+* `View.presentation` unifies all types of presentation, allowing the type to be chosen at runtime (Navigation vs Sheet for example). This lets you describe all mutually exclusive navigation paths in a single state (enum), then present them differently. Or even decide the presentation based on something inside that state.  
 
 ### The App
 
-The app navigates through mathematical operators to modify a number. In so you can navigate infitely forward and backward.
+The app navigates through mathematical operators to modify a number. In so you can navigate infitely forward and backward. A 'counter' screen lets you capture a new number and exercises cancellable effects.
 
 Or, "fork" the current state into a sheet and navigate independently of the initial number. Again, recursively forever.
 
@@ -25,7 +25,7 @@ Pulling that all together, the interesting parts are:
 
 Modeling all possible navigation paths in an enum
 
-```lang=swift
+```swift
 indirect enum ScreenState: Equatable {
     case counter(CounterState)
     case operators(OperatorsState)
@@ -34,7 +34,7 @@ indirect enum ScreenState: Equatable {
 
 Rendering all of those screens with a `SwitchStore`:
 
-```lang=swift
+```swift
 struct ScreenSwitchStore: View {
     let store: Store<ScreenState, ScreenAction>
     var body: some View {
@@ -54,9 +54,9 @@ struct ScreenSwitchStore: View {
 }
 ```` 
 
-Handling all possible presentations of those screens:
+Rendering all possible presentations of those screens:
 
-```lang=swift
+```swift
 struct PresentedScreenSwitchStore: View {
     let type: PresentationType
     let store: Store<ScreenState, ScreenAction>
@@ -76,7 +76,7 @@ struct PresentedScreenSwitchStore: View {
 
 Presenting views at runtime:
 
-```lang=swift
+```swift
 var body: some View {
     List {
         // content
